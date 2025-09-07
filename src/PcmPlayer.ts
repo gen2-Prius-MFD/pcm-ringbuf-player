@@ -10,7 +10,7 @@ export class PcmPlayer {
   private gainNode: GainNode | undefined
   private channels: number
   private worklet: AudioWorkletNode | undefined
-  private buffers: Int16Array[] = []
+  private buffers: Int16Array<ArrayBuffer>[] = []
   private sab = new SharedArrayBuffer(
     RENDER_QUANTUM_FRAMES * Float32Array.BYTES_PER_ELEMENT * MAX_BLOCKS,
   )
@@ -27,7 +27,7 @@ export class PcmPlayer {
     this.channels = channels
   }
 
-  private feedWorklet(data: Int16Array) {
+  private feedWorklet(data: Int16Array<ArrayBuffer>) {
     this.rb.push(data)
   }
 
@@ -35,7 +35,7 @@ export class PcmPlayer {
     return this.sab
   }
 
-  feed(source: Int16Array) {
+  feed(source: Int16Array<ArrayBuffer>) {
     if (this.worklet === undefined) {
       this.buffers.push(source)
       return
